@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [notificationMessage, setNotificationMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -13,6 +14,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -45,10 +48,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      setNotification('wrong username or password', true)
     }
   }
 
@@ -65,13 +65,26 @@ const App = () => {
       url: url
     }
 
-    await blogService.create(blogObject)
-    setBlogs(await blogService.getAll())
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+    try {
+      await blogService.create(blogObject)
+      setBlogs(await blogService.getAll())
 
-    console.log('creating blog')
+      setNotification(`a new blog ${title} by ${author} added`, false)
+
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+    } catch {
+      setNotification('Error when trying to add a new blog. Please fill out all fields.', true)
+    }
+  }
+
+  const setNotification = (message, error) => {
+    setError(error)
+    setNotificationMessage(message)
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000)
   }
 
   const loginForm = () => (
@@ -163,6 +176,7 @@ const App = () => {
   return (
     <div>
       {siteHeader()}
+      <Notification message={notificationMessage} isError={error} />
       {user === null ?
         loginForm() :
         <div>
