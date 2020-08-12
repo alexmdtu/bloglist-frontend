@@ -16,6 +16,15 @@ const App = () => {
     )
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      //blogService.setToken(user.token)
+    }
+  }, [])
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -24,7 +33,7 @@ const App = () => {
       })
 
       window.localStorage.setItem(
-        'loggedNoteappUser', JSON.stringify(user)
+        'loggedBloglistUser', JSON.stringify(user)
       )
 
       //blogService.setToken(user.token)
@@ -37,6 +46,11 @@ const App = () => {
         setErrorMessage(null)
       }, 5000)
     }
+  }
+
+  const logout = () => {
+    window.localStorage.removeItem('loggedBloglistUser')
+    setUser(null)
   }
 
   const loginForm = () => (
@@ -68,10 +82,20 @@ const App = () => {
 
   const blogList = () => (
     <div>
-      <h2>blogs</h2>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
+    </div>
+  )
+
+  const logoutPrompt = () => (
+    <div>
+      <p>{user.name} logged in
+      <button onClick={() => logout()}>
+          logout
+      </button>
+      </p>
+
     </div>
   )
 
@@ -80,7 +104,8 @@ const App = () => {
       {user === null ?
         loginForm() :
         <div>
-          <p>{user.name} logged in</p>
+          <h2>blogs</h2>
+          {logoutPrompt()}
           {blogList()}
         </div>
 
