@@ -76,7 +76,6 @@ const App = () => {
 
   const loginForm = () => (
     <div>
-      <h2>log in to application</h2>
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -155,12 +154,18 @@ const App = () => {
     </div>
   )
 
+  const siteHeader = () => (
+    user === null ?
+      <h2>log in to application</h2> :
+      <h2>blogs</h2>
+  )
+
   return (
     <div>
+      {siteHeader()}
       {user === null ?
         loginForm() :
         <div>
-          <h2>blogs</h2>
           {logoutPrompt()}
           {blogForm()}
           {blogList()}
