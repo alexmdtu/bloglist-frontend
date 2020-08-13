@@ -100,10 +100,15 @@ const App = () => {
     </div>
   )
 
+  const addLike = async (id, newBlog) => {
+    await blogService.update(id, newBlog)
+    setBlogs(await blogService.getAll())
+  }
+
   const blogList = () => (
     <div>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} likeBlog={addLike} />
       )}
     </div>
   )

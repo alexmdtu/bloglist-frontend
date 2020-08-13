@@ -10,13 +10,25 @@ const blogStyle = {
   marginBottom: 5
 }
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, likeBlog }) => {
   const [visible, setVisible] = useState(false)
 
   const showWhenVisible = { display: visible ? '' : 'none' }
 
   const toggleVisibility = () => {
     setVisible(!visible)
+  }
+
+  const addLike = (event) => {
+    event.preventDefault()
+    likeBlog(blog.id,
+      {
+        title: blog.title,
+        author: blog.author,
+        url: blog.url,
+        likes: blog.likes + 1,
+        user: blog.user
+      })
   }
 
   return (
@@ -29,7 +41,7 @@ const Blog = ({ blog }) => {
         <div>{blog.url}</div>
         <div>
           Likes: {blog.likes}
-          <button>like</button>
+          <button onClick={addLike}>like</button>
         </div>
         <div>Added by: {blog.user.name}</div>
       </div>
