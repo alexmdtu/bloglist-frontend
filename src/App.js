@@ -100,8 +100,13 @@ const App = () => {
     </div>
   )
 
-  const addLike = async (id, newBlog) => {
-    await blogService.update(id, newBlog)
+  const addLike = async (blogId, newBlog) => {
+    await blogService.update(blogId, newBlog)
+    setBlogs(await blogService.getAll())
+  }
+
+  const removeBlog = async (blogId) => {
+    await blogService.remove(blogId)
     setBlogs(await blogService.getAll())
   }
 
@@ -109,7 +114,7 @@ const App = () => {
     <div>
       {blogs
         .sort((blogA, blogB) => blogA.likes - blogB.likes)
-        .map(blog => <Blog key={blog.id} blog={blog} likeBlog={addLike} />
+        .map(blog => <Blog key={blog.id} blog={blog} likeBlog={addLike} removeBlog={removeBlog} />
         )}
     </div>
   )

@@ -10,7 +10,7 @@ const blogStyle = {
   marginBottom: 5
 }
 
-const Blog = ({ blog, likeBlog }) => {
+const Blog = ({ blog, likeBlog, removeBlog }) => {
   const [visible, setVisible] = useState(false)
 
   const showWhenVisible = { display: visible ? '' : 'none' }
@@ -31,6 +31,13 @@ const Blog = ({ blog, likeBlog }) => {
       })
   }
 
+  const deleteBlog = (event) => {
+    event.preventDefault()
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      removeBlog(blog.id)
+    }
+  }
+
   return (
     <div style={blogStyle}>
       <div>
@@ -44,6 +51,7 @@ const Blog = ({ blog, likeBlog }) => {
           <button onClick={addLike}>like</button>
         </div>
         <div>Added by: {blog.user.name}</div>
+        <button onClick={deleteBlog}>remove</button>
       </div>
 
     </div>
