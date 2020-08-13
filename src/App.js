@@ -60,7 +60,7 @@ const App = () => {
       await blogService.create(blogObject)
       setBlogs(await blogService.getAll())
 
-      setNotification(`a new blog ${title} by ${author} added`, false)
+      setNotification(`a new blog ${blogObject.title} by ${blogObject.author} added`, false)
     } catch {
       setNotification('Error when trying to add a new blog. Please fill out all fields.', true)
     }
