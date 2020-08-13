@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -11,10 +12,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
 
   const [error, setError] = useState(false)
 
@@ -58,23 +55,12 @@ const App = () => {
     setUser(null)
   }
 
-  const addBlog = async (event) => {
-    event.preventDefault()
-    const blogObject = {
-      title: title,
-      author: author,
-      url: url
-    }
-
+  const addBlog = async (blogObject) => {
     try {
       await blogService.create(blogObject)
       setBlogs(await blogService.getAll())
 
       setNotification(`a new blog ${title} by ${author} added`, false)
-
-      setTitle('')
-      setAuthor('')
-      setUrl('')
     } catch {
       setNotification('Error when trying to add a new blog. Please fill out all fields.', true)
     }
@@ -123,38 +109,9 @@ const App = () => {
   )
 
   const blogForm = () => (
-    <div>
-      <form onSubmit={addBlog}>
-        <div>
-          title:
-          <input
-            type="text"
-            value={title}
-            name={"Title"}
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          author:
-          <input
-            type="text"
-            value={author}
-            name="Author"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url:
-          <input
-            type="text"
-            value={url}
-            name="Url"
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <button type="submit">create</button>
-      </form>
-    </div>
+    <Togglable buttonLabel="new blog">
+      <BlogForm createBlog={addBlog} />
+    </Togglable>
   )
 
   const logoutPrompt = () => (
@@ -182,9 +139,7 @@ const App = () => {
         loginForm() :
         <div>
           {logoutPrompt()}
-          <Togglable buttonLabel="new blog">
-            {blogForm()}
-          </Togglable>
+          {blogForm()}
           {blogList()}
         </div>
 
