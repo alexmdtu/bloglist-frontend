@@ -61,7 +61,7 @@ const App = () => {
       setBlogs(await blogService.getAll())
 
       setNotification(`a new blog ${blogObject.title} by ${blogObject.author} added`, false)
-    } catch {
+    } catch (error) {
       setNotification('Error when trying to add a new blog. Please fill out all fields.', true)
     }
   }
@@ -128,9 +128,9 @@ const App = () => {
   const logoutPrompt = () => (
     <div>
       <p>{user.name} logged in
-      <button onClick={() => logout()}>
+        <button onClick={() => logout()}>
           logout
-      </button>
+        </button>
       </p>
 
     </div>
