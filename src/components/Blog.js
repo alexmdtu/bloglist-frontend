@@ -10,10 +10,11 @@ const blogStyle = {
   marginBottom: 5
 }
 
-const Blog = ({ blog, likeBlog, removeBlog }) => {
+const Blog = ({ blog, likeBlog, removeBlog, user }) => {
   const [visible, setVisible] = useState(false)
 
   const showWhenVisible = { display: visible ? '' : 'none' }
+  const showWhenUserLoggedIn = { display: blog.user.username === user.username ? '' : 'none' }
 
   const toggleVisibility = () => {
     setVisible(!visible)
@@ -51,7 +52,9 @@ const Blog = ({ blog, likeBlog, removeBlog }) => {
           <button onClick={addLike}>like</button>
         </div>
         <div>Added by: {blog.user.name}</div>
-        <button onClick={deleteBlog}>remove</button>
+        <div style={showWhenUserLoggedIn}>
+          <button onClick={deleteBlog}>remove</button>
+        </div>
       </div>
 
     </div>
