@@ -64,9 +64,9 @@ describe('Blog app', function () {
     describe.only('and several blogs exist', function () {
       beforeEach(function () {
         cy.login({ username: 'atu', password: 'secret' })
-        cy.createBlog({ title: 'first blog', author: 'Alex', url: 'www.first.com' })
-        cy.createBlog({ title: 'second blog', author: 'Martin', url: 'www.second.com' })
-        cy.createBlog({ title: 'third blog', author: 'Jan', url: 'www.third.com' })
+        cy.createBlog({ title: 'first blog', author: 'Alex', url: 'www.first.com', likes: 3 })
+        cy.createBlog({ title: 'second blog', author: 'Martin', url: 'www.second.com', likes: 0 })
+        cy.createBlog({ title: 'third blog', author: 'Jan', url: 'www.third.com', likes: 1 })
       })
 
       it('one of those can be liked', function () {
@@ -87,6 +87,17 @@ describe('Blog app', function () {
         cy.login({ username: 'jan', password: 'pass' })
         cy.contains('second blog').contains('show').click()
         cy.get('.extraBlogContent:visible').should('not.contain', 'remove:visible')
+      })
+
+      it.only('blogs have correct order', function () {
+        cy.get('.blog')
+          .first().contains('second blog')
+        cy.get('.blog')
+          .eq(1)
+          .contains('third blog')
+        cy.get('.blog')
+          .last()
+          .contains('first blog')
       })
     })
   })
