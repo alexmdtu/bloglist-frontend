@@ -43,13 +43,13 @@ const Blog = ({ blog, likeBlog, removeBlog, user }) => {
     <div style={blogStyle}>
       <div>
         {blog.title} by {blog.author}
-        <button onClick={toggleVisibility}>{visible ? 'hide' : 'show'}</button>
+        <button id="toggleVisibility-button" onClick={toggleVisibility}>{visible ? 'hide' : 'show'}</button>
       </div>
       <div style={showWhenVisible} className="extraBlogContent">
         <div>{blog.url}</div>
         <div>
           Likes: {blog.likes}
-          <button onClick={addLike}>like</button>
+          <button id="addLike-button" onClick={addLike}>like</button>
         </div>
         <div>Added by: {blog.user.name}</div>
         <div style={showWhenUserLoggedIn}>

@@ -1,5 +1,7 @@
 /// <reference types="Cypress" />
 
+const { default: BlogForm } = require("../../src/components/BlogForm")
+
 describe('Blog app', function () {
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3001/api/testing/reset')
@@ -41,7 +43,7 @@ describe('Blog app', function () {
     })
   })
 
-  describe.only('When logged in', function () {
+  describe('When logged in', function () {
     beforeEach(function () {
       cy.login({ username: 'atu', password: 'secret' })
     })
@@ -53,6 +55,21 @@ describe('Blog app', function () {
       cy.get('#url').type('www.test.com')
       cy.get('#add-blog-button').click()
       cy.contains('New Title by Alex')
+    })
+
+    describe.only('and several blogs exist', function () {
+      beforeEach(function () {
+        cy.login({ username: 'atu', password: 'secret' })
+        cy.createBlog({ title: 'first blog', author: 'Alex', url: 'www.first.com' })
+        cy.createBlog({ title: 'second blog', author: 'Martin', url: 'www.second.com' })
+        cy.createBlog({ title: 'third blog', author: 'Jan', url: 'www.third.com' })
+      })
+
+      it('one of those can be liked', function () {
+        cy.get('#toggleVisibility-button').click()
+        cy.get('#addLike-button').click()
+        cy.contains('Likes: 1')
+      })
     })
   })
 })
