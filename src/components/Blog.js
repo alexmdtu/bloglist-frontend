@@ -53,7 +53,7 @@ const Blog = ({ blog, likeBlog, removeBlog, user }) => {
         </div>
         <div>Added by: {blog.user.name}</div>
         <div style={showWhenUserLoggedIn}>
-          <button onClick={deleteBlog}>remove</button>
+          <button id="delete-button" onClick={deleteBlog}>remove</button>
         </div>
       </div>
 

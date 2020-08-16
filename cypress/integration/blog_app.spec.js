@@ -1,16 +1,20 @@
 /// <reference types="Cypress" />
 
-const { default: BlogForm } = require("../../src/components/BlogForm")
-
 describe('Blog app', function () {
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3001/api/testing/reset')
-    const user = {
+    const userAlex = {
       name: 'Alex',
       username: 'atu',
       password: 'secret'
     }
-    cy.request('POST', 'http://localhost:3001/api/users', user)
+    const userJan = {
+      name: 'Jan',
+      username: 'jan',
+      password: 'pass'
+    }
+    cy.request('POST', 'http://localhost:3001/api/users', userAlex)
+    cy.request('POST', 'http://localhost:3001/api/users', userJan)
     cy.visit('http://localhost:3000')
   })
 
@@ -66,9 +70,23 @@ describe('Blog app', function () {
       })
 
       it('one of those can be liked', function () {
-        cy.get('#toggleVisibility-button').click()
-        cy.get('#addLike-button').click()
+        cy.contains('second blog').contains('show').click()
+        cy.get('.extraBlogContent:visible').contains('like').click()
         cy.contains('Likes: 1')
+      })
+
+      it('one of those can be deleted if correct user logged in', function () {
+        cy.contains('second blog').contains('show').click()
+        cy.get('.extraBlogContent:visible').contains('remove').click()
+        cy.get('html')
+          .should('not.contain', 'second blog')
+      })
+
+      it('one of those cannot be deleted with incorrect user', function () {
+        cy.contains('logout').click()
+        cy.login({ username: 'jan', password: 'pass' })
+        cy.contains('second blog').contains('show').click()
+        cy.get('.extraBlogContent:visible').should('not.contain', 'remove:visible')
       })
     })
   })
