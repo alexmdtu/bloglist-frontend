@@ -40,4 +40,19 @@ describe('Blog app', function () {
         .and('not.contain', 'blogs')
     })
   })
+
+  describe.only('When logged in', function () {
+    beforeEach(function () {
+      cy.login({ username: 'atu', password: 'secret' })
+    })
+
+    it('A blog can be created', function () {
+      cy.contains('new blog').click()
+      cy.get('#title').type('New Title')
+      cy.get('#author').type('Alex')
+      cy.get('#url').type('www.test.com')
+      cy.get('#add-blog-button').click()
+      cy.contains('New Title by Alex')
+    })
+  })
 })
