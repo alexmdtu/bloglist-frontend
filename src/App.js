@@ -5,15 +5,16 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import { setNotification } from './reducers/notificationsReducer'
+import { useDispatch } from 'react-redux'
 
 const App = () => {
+  const dispatch = useDispatch()
+
   const [blogs, setBlogs] = useState([])
-  const [notificationMessage, setNotificationMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-
-  const [error, setError] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -46,7 +47,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setNotification('wrong username or password', true)
+      dispatch(setNotification('wrong username or password', 5, true))
     }
   }
 
@@ -60,18 +61,10 @@ const App = () => {
       await blogService.create(blogObject)
       setBlogs(await blogService.getAll())
 
-      setNotification(`a new blog ${blogObject.title} by ${blogObject.author} added`, false)
+      dispatch(setNotification(`a new blog ${blogObject.title} by ${blogObject.author} added`, 5, false))
     } catch (error) {
-      setNotification('Error when trying to add a new blog. Please fill out all fields.', true)
+      dispatch(setNotification('Error when trying to add a new blog. Please fill out all fields.', 5, true))
     }
-  }
-
-  const setNotification = (message, error) => {
-    setError(error)
-    setNotificationMessage(message)
-    setTimeout(() => {
-      setNotificationMessage(null)
-    }, 5000)
   }
 
   const loginForm = () => (
@@ -147,7 +140,7 @@ const App = () => {
   return (
     <div>
       {siteHeader()}
-      <Notification message={notificationMessage} isError={error} />
+      <Notification />
       {user === null ?
         loginForm() :
         <div>
