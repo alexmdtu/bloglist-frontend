@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 const blogReducer = (state = [], action) => {
   switch (action.type) {
     case 'SET_BLOGS':

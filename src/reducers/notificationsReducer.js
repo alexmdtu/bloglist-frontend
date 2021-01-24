@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 const initialState = { message: null, isError: false }
 
 let timeoutID = null
