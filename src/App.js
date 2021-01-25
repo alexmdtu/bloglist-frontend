@@ -9,6 +9,7 @@ import { setNotification } from './reducers/notificationsReducer'
 import { getBlogs, createBlog } from './reducers/blogReducer'
 import { setUser } from './reducers/loginReducer'
 import { useDispatch, useSelector } from 'react-redux'
+import { getUsers } from './reducers/userReducer'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -18,9 +19,11 @@ const App = () => {
 
   const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
+  const users = useSelector(state => state.users)
 
   useEffect(() => {
     dispatch(getBlogs())
+    dispatch(getUsers())
   }, [dispatch])
 
   useEffect(() => {
@@ -133,6 +136,26 @@ const App = () => {
       <h2>blogs</h2>
   )
 
+  const UserList = () => {
+    return (
+      <div>
+        <h2>Users</h2>
+        <table>
+          <tbody>
+            <tr>
+              <th></th>
+              <th>blogs created</th>
+            </tr>
+            {users.map(n => <tr key={n.id}>
+              <td>{n.name}</td>
+              <td>{n.blogs.length}</td>
+            </tr>)}
+          </tbody>
+        </table>
+      </div>
+    )
+  }
+
   return (
     <div>
       {siteHeader()}
@@ -143,6 +166,7 @@ const App = () => {
           {logoutPrompt()}
           {blogForm()}
           {blogList()}
+          <UserList />
         </div>
 
       }
