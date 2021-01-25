@@ -57,7 +57,7 @@ const App = () => {
 
   const logout = () => {
     window.localStorage.removeItem('loggedBloglistUser')
-    setUser(null)
+    dispatch(setUser(null))
   }
 
   const addBlog = (blogObject) => {
