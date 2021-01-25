@@ -211,7 +211,7 @@ const App = () => {
         </div>
         <div>Added by: {blog.user.name}</div>
         <div style={showWhenUserLoggedIn}>
-          <button id="delete-button" onClick={remove}>remove</button>
+          <button id="delete-button" onClick={remove}><Link to='/blogs'>remove</Link></button>
         </div>
       </div>
     )
