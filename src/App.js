@@ -6,7 +6,7 @@ import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { setNotification } from './reducers/notificationsReducer'
-import { setBlogs } from './reducers/blogReducer'
+import { getBlogs, createBlog } from './reducers/blogReducer'
 import { useDispatch, useSelector } from 'react-redux'
 
 const App = () => {
@@ -19,10 +19,7 @@ const App = () => {
   const blogs = useSelector(state => state.blogs)
 
   useEffect(() => {
-    blogService.getAll().then(blogs => {
-      dispatch(setBlogs(blogs))
-    }
-    )
+    dispatch(getBlogs())
   }, [dispatch])
 
   useEffect(() => {
@@ -59,15 +56,8 @@ const App = () => {
     setUser(null)
   }
 
-  const addBlog = async (blogObject) => {
-    try {
-      await blogService.create(blogObject)
-      dispatch(setBlogs(await blogService.getAll()))
-
-      dispatch(setNotification(`a new blog ${blogObject.title} by ${blogObject.author} added`, 5, false))
-    } catch (error) {
-      dispatch(setNotification('Error when trying to add a new blog. Please fill out all fields.', 5, true))
-    }
+  const addBlog = (blogObject) => {
+    dispatch(createBlog(blogObject))
   }
 
   const loginForm = () => (
@@ -100,12 +90,12 @@ const App = () => {
 
   const addLike = async (blogId, newBlog) => {
     await blogService.update(blogId, newBlog)
-    dispatch(setBlogs(await blogService.getAll()))
+    dispatch(getBlogs())
   }
 
   const removeBlog = async (blogId) => {
     await blogService.remove(blogId)
-    dispatch(setBlogs(await blogService.getAll()))
+    dispatch(getBlogs())
   }
 
   const blogList = () => (
