@@ -28,7 +28,6 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       dispatch(setUser(user))
-      console.log('test')
       blogService.setToken(user.token)
     } else {
       dispatch(setUser(null))
