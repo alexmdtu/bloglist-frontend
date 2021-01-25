@@ -110,7 +110,7 @@ const App = () => {
     <div>
       {blogs
         .sort((blogA, blogB) => blogA.likes - blogB.likes)
-        .map(blog => <Blog key={blog.id} blog={blog} likeBlog={addLike} removeBlog={removeBlog} user={user} />
+        .map(blog => <Blog key={blog.id} blog={blog} user={user} />
         )}
     </div>
   )
@@ -177,6 +177,46 @@ const App = () => {
     )
   }
 
+  const BlogDetail = (blogs) => {
+    const id = useParams().id
+    const blog = blogs.blogs.find(n => n.id === id)
+    const showWhenUserLoggedIn = { display: blog.user.username === user.username ? '' : 'none' }
+
+    const remove = (event) => {
+      event.preventDefault()
+      if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+        removeBlog(blog.id)
+      }
+    }
+
+    const like = (event) => {
+      event.preventDefault()
+      addLike(blog.id,
+        {
+          title: blog.title,
+          author: blog.author,
+          url: blog.url,
+          likes: blog.likes + 1,
+          user: blog.user
+        })
+    }
+
+    return (
+      <div>
+        <h2>{blog.title}</h2>
+        <div>{blog.url}</div>
+        <div>
+          Likes: {blog.likes}
+          <button id="addLike-button" onClick={like}>like</button>
+        </div>
+        <div>Added by: {blog.user.name}</div>
+        <div style={showWhenUserLoggedIn}>
+          <button id="delete-button" onClick={remove}>remove</button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div>
       {siteHeader()}
@@ -187,6 +227,9 @@ const App = () => {
           {logoutPrompt()}
           <Router>
             <Switch>
+              <Route path='/blogs/:id'>
+                <BlogDetail blogs={blogs} />
+              </Route>
               <Route path='/blogs'>
                 {blogForm()}
                 {blogList()}
