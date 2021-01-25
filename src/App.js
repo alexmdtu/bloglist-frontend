@@ -10,6 +10,7 @@ import { getBlogs, createBlog } from './reducers/blogReducer'
 import { setUser } from './reducers/loginReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUsers } from './reducers/userReducer'
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -164,11 +165,18 @@ const App = () => {
         loginForm() :
         <div>
           {logoutPrompt()}
-          {blogForm()}
-          {blogList()}
-          <UserList />
+          <Router>
+            <Switch>
+              <Route path='/blogs'>
+                {blogForm()}
+                {blogList()}
+              </Route>
+              <Route path='/users'>
+                <UserList />
+              </Route>
+            </Switch>
+          </Router>
         </div>
-
       }
     </div>
   )
