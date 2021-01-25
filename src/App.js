@@ -11,6 +11,7 @@ import { setUser } from './reducers/loginReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUsers } from './reducers/userReducer'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -148,11 +149,30 @@ const App = () => {
               <th>blogs created</th>
             </tr>
             {users.map(n => <tr key={n.id}>
-              <td>{n.name}</td>
+              <td><Link to={`/users/${n.id}`}>{n.name}</Link></td>
               <td>{n.blogs.length}</td>
             </tr>)}
           </tbody>
         </table>
+      </div>
+    )
+  }
+
+  const UserBlogList = (users) => {
+    const usersArray = users.users
+    const id = useParams().id
+    const user = usersArray.find(n => n.id === id)
+    if (!user) {
+      return null
+    }
+
+    return (
+      <div>
+        <h2>{user.name}</h2>
+        <h3>added blogs</h3>
+        <ul>
+          {user.blogs.map(blog => <li key={blog.id}>{blog.title}</li>)}
+        </ul>
       </div>
     )
   }
@@ -170,6 +190,9 @@ const App = () => {
               <Route path='/blogs'>
                 {blogForm()}
                 {blogList()}
+              </Route>
+              <Route path='/users/:id'>
+                <UserBlogList users={users} />
               </Route>
               <Route path='/users'>
                 <UserList />
