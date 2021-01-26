@@ -10,7 +10,7 @@ import { getBlogs, createBlog } from './reducers/blogReducer'
 import { setUser } from './reducers/loginReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUsers } from './reducers/userReducer'
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom'
 import { useParams, useHistory } from 'react-router-dom'
 
 const App = () => {
@@ -22,6 +22,10 @@ const App = () => {
   const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
   const users = useSelector(state => state.users)
+
+  const padding = {
+    padding: 5
+  }
 
   useEffect(() => {
     dispatch(getBlogs())
@@ -68,8 +72,9 @@ const App = () => {
     dispatch(createBlog(blogObject))
   }
 
-  const loginForm = () => (
+  const LoginForm = () => (
     <div>
+      <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -121,16 +126,16 @@ const App = () => {
     </Togglable>
   )
 
-  const logoutPrompt = () => (
-    <div>
-      <p>{user.name} logged in
+  const LogoutPrompt = () => {
+    return (
+      <>
+        {user.name} logged in
         <button onClick={() => logout()}>
           logout
         </button>
-      </p>
-
-    </div>
-  )
+      </>
+    )
+  }
 
   const siteHeader = () => (
     user === null ?
@@ -219,20 +224,30 @@ const App = () => {
     )
   }
 
+  const Navigation = () => {
+    return (
+      <div>
+        <Link style={padding} to='/blogs'>blogs</Link>
+        <Link style={padding} to='/users'>users</Link>
+        <LogoutPrompt />
+      </div>
+    )
+  }
+
   return (
     <div>
-      {siteHeader()}
       <Notification />
       {user === null ?
-        loginForm() :
+        LoginForm() :
         <div>
-          {logoutPrompt()}
           <Router>
+            <Navigation />
             <Switch>
               <Route path='/blogs/:id'>
                 <BlogDetail blogs={blogs} />
               </Route>
               <Route path='/blogs'>
+                {siteHeader()}
                 {blogForm()}
                 {blogList()}
               </Route>
@@ -241,6 +256,9 @@ const App = () => {
               </Route>
               <Route path='/users'>
                 <UserList />
+              </Route>
+              <Route path='/'>
+                <Redirect to='/blogs' />
               </Route>
             </Switch>
           </Router>
