@@ -11,7 +11,7 @@ import { setUser } from './reducers/loginReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUsers } from './reducers/userReducer'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -178,6 +178,7 @@ const App = () => {
   }
 
   const BlogDetail = (blogs) => {
+    const history = useHistory()
     const id = useParams().id
     const blog = blogs.blogs.find(n => n.id === id)
     const showWhenUserLoggedIn = { display: blog.user.username === user.username ? '' : 'none' }
@@ -187,6 +188,7 @@ const App = () => {
       if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
         removeBlog(blog.id)
       }
+      history.push('/blogs')
     }
 
     const like = (event) => {
@@ -211,7 +213,7 @@ const App = () => {
         </div>
         <div>Added by: {blog.user.name}</div>
         <div style={showWhenUserLoggedIn}>
-          <button id="delete-button" onClick={remove}><Link to='/blogs'>remove</Link></button>
+          <button id="delete-button" onClick={remove}>remove</button>
         </div>
       </div>
     )
